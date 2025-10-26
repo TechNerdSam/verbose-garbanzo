@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur d'Empreinte Carbone</title>
+    <!-- Chargement de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Importation de la police Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Définition de la police Inter comme police par défaut */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Style pour les sliders */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #374151; /* bg-gray-700 */
+            border-radius: 5px;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+        }
+
+        input[type="range"]:hover {
+            opacity: 1;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #10b981; /* bg-emerald-500 */
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #10b981; /* bg-emerald-500 */
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Style pour la barre de résultat */
+        .result-bar {
+            transition: width 1s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 to-gray-900 text-gray-200 min-h-screen flex items-center justify-center p-4">
+
+    <main class="w-full max-w-2xl">
+        <!-- Conteneur principal avec effet "verre dépoli" futuriste -->
+        <div class="bg-slate-800/50 backdrop-blur-lg border border-slate-700/50 rounded-2xl p-8 md:p-12 shadow-2xl transition-all duration-300">
+            
+            <header class="text-center mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">
+                    Calculateur d'Empreinte Carbone
+                </h1>
+                <p class="text-slate-300 mt-2 text-lg">Estimez votre impact annuel sur la planète.</p>
+            </header>
+
+            <!-- Formulaire -->
+            <form id="carbonForm" class="space-y-8">
+
+                <!-- Section Transport -->
+                <section>
+                    <h2 class="text-2xl font-semibold mb-4 border-b border-slate-600 pb-2 text-emerald-400">
+                        <span class="inline-block mr-2">🚗</span> Transport
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Voiture -->
+                        <div>
+                            <label for="carKm" class="block text-sm font-medium text-slate-300 mb-2">Voiture (km / semaine)</label>
+                            <input type="number" id="carKm" name="carKm" class="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" placeholder="ex: 150" min="0" value="0">
+                        </div>
+                        <!-- Transports en commun -->
+                        <div>
+                            <label for="publicTransportKm" class="block text-sm font-medium text-slate-300 mb-2">Transports en commun (km / semaine)</label>
+                            <input type="number" id="publicTransportKm" name="publicTransportKm" class="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" placeholder="ex: 50" min="0" value="0">
+                        </div>
+                    </div>
+                    <!-- Vols -->
+                    <div class="mt-6">
+                        <label for="flightHours" class="block text-sm font-medium text-slate-300 mb-2">Vols (heures / an)</label>
+                        <input type="number" id="flightHours" name="flightHours" class="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" placeholder="ex: 4" min="0" value="0">
+                    </div>
+                </section>
+
+                <!-- Section Énergie & Alimentation -->
+                <section>
+                    <h2 class="text-2xl font-semibold mb-4 border-b border-slate-600 pb-2 text-cyan-400">
+                        <span class="inline-block mr-2">💡</span> Énergie & Alimentation
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Électricité -->
+                        <div>
+                            <label for="electricity" class="block text-sm font-medium text-slate-300 mb-2">Électricité (kWh / mois)</label>
+                            <input type="number" id="electricity" name="electricity" class="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all" placeholder="ex: 300" min="0" value="0">
+                        </div>
+                        <!-- Alimentation -->
+                        <div>
+                            <label for="diet" class="block text-sm font-medium text-slate-300 mb-2">Régime alimentaire</label>
+                            <select id="diet" name="diet" class="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all">
+                                <option value="vegan">Vegan</option>
+                                <option value="vegetarian">Végétarien</option>
+                                <option value="omnivore" selected>Omnivore (modéré)</option>
+                                <option value="meatLover">Riche en viande</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section Consommation -->
+                <section>
+                    <h2 class="text-2xl font-semibold mb-4 border-b border-slate-600 pb-2 text-fuchsia-400">
+                        <span class="inline-block mr-2">🛍️</span> Consommation
+                    </h2>
+                    <div>
+                        <label for="consumption" class="block text-sm font-medium text-slate-300 mb-2">Achats & services (biens, vêtements, loisirs...)</label>
+                        <input type="range" id="consumption" name="consumption" min="1" max="5" value="3" class="w-full">
+                        <div class="flex justify-between text-xs text-slate-400 mt-2">
+                            <span>Très faible</span>
+                            <span>Moyen</span>
+                            <span>Très élevé</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Bouton de calcul -->
+                <div class="text-center pt-4">
+                    <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-emerald-500 to-cyan-600 text-white font-bold text-lg px-12 py-3 rounded-lg shadow-lg hover:shadow-emerald-500/30 transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-emerald-500/50">
+                        Calculer mon empreinte
+                    </button>
+                </div>
+            </form>
+
+            <!-- Section des résultats (cachée par défaut) -->
+            <div id="resultsContainer" class="hidden mt-10 text-center">
+                <h2 class="text-2xl font-semibold mb-4">Votre résultat</h2>
+                <div class="bg-slate-900 rounded-xl p-6 shadow-inner">
+                    <p class="text-lg text-slate-300">Votre empreinte carbone annuelle est estimée à :</p>
+                    <p id="totalFootprint" class="text-5xl font-bold my-4 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">
+                        0.00
+                    </p>
+                    <p class="text-lg text-slate-300">tonnes de CO<sub class="text-sm">2</sub>e</p>
+                    
+                    <!-- Barre de comparaison -->
+                    <div class="mt-6">
+                        <p class="text-sm text-slate-400 mb-2">Comparaison à la moyenne française (approx. 9T)</p>
+                        <div class="bg-gray-700 rounded-full h-4 w-full overflow-hidden">
+                            <div id="resultBar" class="result-bar h-4 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-500" style="width: 0%;"></div>
+                        </div>
+                        <div class="relative h-4">
+                            <!-- Marqueur moyenne française -->
+                            <div class="absolute top-0 h-4 border-r-2 border-dashed border-red-400" style="left: 45%;" title="Moyenne française (9T)">
+                                <span class="absolute -top-6 -translate-x-1/2 text-xs text-red-400">9T</span>
+                            </div>
+                            <!-- Marqueur objectif accord de Paris (2T) -->
+                            <div class="absolute top-0 h-4 border-r-2 border-dashed border-green-400" style="left: 10%;" title="Objectif 2T">
+                                <span class="absolute -top-6 -translate-x-1/2 text-xs text-green-400">2T</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Breakdown -->
+                <div class="mt-6 text-left">
+                    <h3 class="text-xl font-semibold mb-3">Répartition :</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-300">🚗 Transport</span>
+                            <span id="transportResult" class="font-medium text-emerald-400">0.00 T</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-300">💡 Énergie</span>
+                            <span id="energyResult" class="font-medium text-cyan-400">0.00 T</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-300">🍽️ Alimentation</span>
+                            <span id="dietResult" class="font-medium text-yellow-400">0.00 T</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-300">🛍️ Consommation</span>
+                            <span id="consumptionResult" class="font-medium text-fuchsia-400">0.00 T</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="resetButton" class="mt-8 text-sm text-slate-400 hover:text-emerald-500 transition-all">Recalculer</button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Logique de calcul
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('carbonForm');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const formContainer = form.parentElement;
+            const resetButton = document.getElementById('resetButton');
+
+            // Éléments de résultat
+            const totalFootprintEl = document.getElementById('totalFootprint');
+            const resultBarEl = document.getElementById('resultBar');
+            const transportResultEl = document.getElementById('transportResult');
+            const energyResultEl = document.getElementById('energyResult');
+            const dietResultEl = document.getElementById('dietResult');
+            const consumptionResultEl = document.getElementById('consumptionResult');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // --- FACTEURS D'ÉMISSION (Estimations simplifiées en tonnes de CO2e) ---
+                const EMISSION_FACTORS = {
+                    car: (0.18 / 1000) * 52, // kg/km -> T/km -> T/an (pour km/semaine)
+                    publicTransport: (0.04 / 1000) * 52, // kg/km -> T/km -> T/an
+                    flight: 0.09, // T/heure de vol/an
+                    electricity: (0.05 / 1000) * 12, // kg/kWh -> T/kWh -> T/an (pour kWh/mois) (Basé sur mix FR)
+                    diet: {
+                        vegan: 1.5,
+                        vegetarian: 1.7,
+                        omnivore: 2.5,
+                        meatLover: 3.3
+                    },
+                    consumption: {
+                        1: 0.8, // Très faible
+                        2: 1.5, // Faible
+                        3: 2.5, // Moyen
+                        4: 4.0, // Élevé
+                        5: 6.0  // Très élevé
+                    }
+                };
+
+                // --- RÉCUPÉRATION DES VALEURS ---
+                const carKm = parseFloat(document.getElementById('carKm').value) || 0;
+                const publicTransportKm = parseFloat(document.getElementById('publicTransportKm').value) || 0;
+                const flightHours = parseFloat(document.getElementById('flightHours').value) || 0;
+                const electricity = parseFloat(document.getElementById('electricity').value) || 0;
+                const diet = document.getElementById('diet').value;
+                const consumption = document.getElementById('consumption').value;
+
+                // --- CALCUL DES ÉMISSIONS PAR CATÉGORIE ---
+                const transportEmission = (carKm * EMISSION_FACTORS.car) +
+                                          (publicTransportKm * EMISSION_FACTORS.publicTransport) +
+                                          (flightHours * EMISSION_FACTORS.flight);
+
+                const energyEmission = electricity * EMISSION_FACTORS.electricity;
+
+                const dietEmission = EMISSION_FACTORS.diet[diet] || 0;
+
+                const consumptionEmission = EMISSION_FACTORS.consumption[consumption] || 0;
+
+                const totalEmission = transportEmission + energyEmission + dietEmission + consumptionEmission;
+
+                // --- AFFICHAGE DES RÉSULTATS ---
+                
+                // 1. Cacher le formulaire et afficher les résultats
+                form.classList.add('hidden');
+                resultsContainer.classList.remove('hidden');
+                
+                // 2. Mettre à jour les chiffres
+                totalFootprintEl.textContent = totalEmission.toFixed(2);
+                transportResultEl.textContent = `${transportEmission.toFixed(2)} T`;
+                energyResultEl.textContent = `${energyEmission.toFixed(2)} T`;
+                dietResultEl.textContent = `${dietEmission.toFixed(2)} T`;
+                consumptionResultEl.textContent = `${consumptionEmission.toFixed(2)} T`;
+
+                // 3. Mettre à jour la barre de progression (plafonnée à 20T pour la visibilité)
+                const maxBarValue = 20; // 20 Tonnes = 100% de la barre
+                const percentage = Math.min((totalEmission / maxBarValue) * 100, 100);
+                
+                // Délai pour l'animation de la barre
+                setTimeout(() => {
+                    resultBarEl.style.width = `${percentage}%`;
+                }, 100);
+                
+                // Scroller vers le haut du conteneur pour voir le résultat
+                formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            
+            // Logique du bouton Reset
+            resetButton.addEventListener('click', () => {
+                resultsContainer.classList.add('hidden');
+                form.classList.remove('hidden');
+                form.reset();
+                resultBarEl.style.width = '0%';
+                
+                // Scroller vers le haut
+                formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>
